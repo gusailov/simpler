@@ -2,23 +2,27 @@ require_relative 'view'
 
 module Simpler
   class Controller
-    attr_reader :name, :request, :response
+    attr_reader :name, :request, :response, :parameters
 
     def initialize(env)
       @name = extract_name
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
+      @parameters = {}
     end
 
     def make_response(action)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
 
-      set_default_headers
       send(action)
       write_response
 
       @response.finish
+    end
+
+    def path_parameters(route)
+      @parameters = Hash[route.path_params.zip(@request.path.split('/') - route.path.split('/'))]
     end
 
     private
@@ -49,12 +53,15 @@ module Simpler
     end
 
     def status(status)
-      p "status #{status}"
+      @response.status = status
     end
 
-    def render(options)
-      @request.env['simpler.template'] = options[:template]
-      p options[:plain]
+    def render(template)
+      if template.is_a? String
+        @request.env['simpler.template'] = template
+      else
+        @request.env['simpler.format'] = template.keys.first
+      end
     end
   end
 end
