@@ -59,8 +59,12 @@ module Simpler
     def render(template)
       if template.is_a? String
         @request.env['simpler.template'] = template
+      elsif template.keys.first == :plain
+        puts "rendering #{template.keys.first.inspect}"
+        @response.write(template.values.first)
       else
         @request.env['simpler.format'] = template.keys.first
+
       end
     end
   end

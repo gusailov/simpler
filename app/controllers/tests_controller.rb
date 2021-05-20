@@ -14,6 +14,6 @@ class TestsController < Simpler::Controller
   def show
     headers['Content-Type'] = 'show'
     # render 'tests/show'
-    # render plain: "pars in show #{parameters[:id]}"
+    render plain: "pars in show #{parameters[:id]}"
   end
 end
