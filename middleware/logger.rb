@@ -9,8 +9,7 @@ class AppLogger
 
   def call(env)
     request = Rack::Request.new(env)
-    # Response: 200 OK [text/html] tests/index.html.erb
-    @logger.info("Request: #{env['REQUEST_METHOD']} #{env['REQUEST_URI']}")
+     @logger.info("Request: #{env['REQUEST_METHOD']} #{env['REQUEST_URI']}")
     @app.call(env)
     controller = env['simpler.controller']
 
