@@ -2,13 +2,13 @@ require_relative 'view'
 
 module Simpler
   class Controller
-    attr_reader :name, :request, :response, :parameters
+    attr_reader :name, :request, :response
 
     def initialize(env)
       @name = extract_name
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
-      @parameters = {}
+      @route = env['simpler.route']
     end
 
     def make_response(action)
@@ -22,8 +22,8 @@ module Simpler
       @response.finish
     end
 
-    def path_parameters(route)
-      @parameters = Hash[route.path_params.zip(@request.path.split('/') - route.path.split('/'))]
+    def parameters
+      Hash[@route.path_params.zip(@request.path.split('/') - @route.path.split('/'))]
     end
 
     private
