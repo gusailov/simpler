@@ -15,6 +15,7 @@ module Simpler
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
 
+      set_default_headers
       send(action)
       write_response
 
@@ -36,7 +37,7 @@ module Simpler
     end
 
     def set_default_headers
-      @response['Content-Type'] = 'text/html' unless @response.headers
+      @response['Content-Type'] = 'text/html'
     end
 
     def write_response
@@ -57,14 +58,12 @@ module Simpler
     end
 
     def render(template)
-      if template.is_a? String
-        @request.env['simpler.template'] = template
-      elsif template.keys.first == :plain
+      if template.keys.first == :plain
+
         puts "rendering #{template.keys.first.inspect}"
         @response.write(template.values.first)
       else
-        @request.env['simpler.format'] = template.keys.first
-
+        @request.env['simpler.template'] = template
       end
     end
   end

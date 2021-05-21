@@ -8,11 +8,12 @@ module Simpler
   class Application
     include Singleton
 
-    attr_reader :db
+    attr_reader :db, :controller
 
     def initialize
       @router = Router.new
       @db = nil
+      @controller = nil
     end
 
     def bootstrap!
@@ -29,7 +30,7 @@ module Simpler
       route = @router.route_for(env)
       if route
 
-        controller = route.controller.new(env)
+        @controller = route.controller.new(env)
         action = route.action
 
         controller.path_parameters(route)
