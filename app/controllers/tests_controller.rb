@@ -1,5 +1,6 @@
 class TestsController < Simpler::Controller
   def index
+    render 'tests/list'
     @time = Time.now
   end
 
@@ -8,6 +9,6 @@ class TestsController < Simpler::Controller
   def show
     headers['Content-Type'] = 'show'
     # render 'tests/show'
-    render plain: "pars in show #{parameters[:id]}"
+    render plain: "pars in show sdfsdfsdf #{parameters[:id]}"
   end
 end

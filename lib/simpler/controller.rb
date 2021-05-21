@@ -41,8 +41,8 @@ module Simpler
     end
 
     def write_response
-      body = render_body
-      @response.write(body)
+      @body ||= render_body
+      @response.write(@body)
     end
 
     def render_body
@@ -58,10 +58,10 @@ module Simpler
     end
 
     def render(template)
-      if template.keys.first == :plain
+      if template.is_a?(Hash) && template.keys.first == :plain
 
-        puts "rendering #{template.keys.first.inspect}"
-        @response.write(template.values.first)
+        headers['Content-Type'] = 'text/plain'
+        @body = template.values.first
       else
         @request.env['simpler.template'] = template
       end
