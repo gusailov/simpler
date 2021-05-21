@@ -8,12 +8,11 @@ module Simpler
   class Application
     include Singleton
 
-    attr_reader :db, :controller
+    attr_reader :db
 
     def initialize
       @router = Router.new
       @db = nil
-      @controller = nil
     end
 
     def bootstrap!
@@ -30,11 +29,11 @@ module Simpler
       route = @router.route_for(env)
       if route
 
-        @controller = route.controller.new(env)
+        controller = route.controller.new(env)
         action = route.action
 
         controller.path_parameters(route)
-        make_response(controller, action)
+        controller.make_response(action)
       else [404, { 'Content-Type' => 'text/plain' }, ['Page not found']]
       end
     end
@@ -53,10 +52,6 @@ module Simpler
       database_config = YAML.load_file(Simpler.root.join('config/database.yml'))
       database_config['database'] = Simpler.root.join(database_config['database'])
       @db = Sequel.connect(database_config)
-    end
-
-    def make_response(controller, action)
-      controller.make_response(action)
     end
   end
 end
